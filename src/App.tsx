@@ -1,5 +1,6 @@
 import React from 'react';
 import LandingPage from './pages/LandingPage';
+import Layout from './components/Layout';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { GameProvider } from './context/GameContext';

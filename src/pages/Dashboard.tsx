@@ -130,7 +130,7 @@ const Dashboard = () => {
   const { state, dispatch } = useGame();
   const { user, ecoVillage, dailyChallenges, gameStats } = state;
   const navigate = useNavigate();
-  const { user: authUser, logout } = useAuth();
+  const { user: authUser } = useAuth();
 
   const [challenges, setChallenges] = React.useState(dailyChallenges);
   React.useEffect(() => setChallenges(dailyChallenges), [dailyChallenges]);
