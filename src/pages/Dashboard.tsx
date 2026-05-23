@@ -95,6 +95,17 @@ const XPPanel: React.FC<{ authUser: any }> = ({ authUser }) => {
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-yellow-300 w-6">#{entry.rank}</span>
+                  {entry.avatarUrl ? (
+                    <img
+                      src={entry.avatarUrl}
+                      alt={entry.username}
+                      className="w-6 h-6 rounded-full object-cover border border-white/20"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white font-bold border border-white/15">
+                      {entry.username.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <span className="text-sm text-white truncate max-w-[80px]">{entry.username}</span>
                 </div>
                 <div className="text-right">
