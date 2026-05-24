@@ -69,21 +69,40 @@ const Auth = () => {
 
     setError('');
 
-    if (name === 'email' && value && !validateEmail(value)) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        email: 'Please enter a valid email address.'
-      }));
+    if (name === 'email') {
+      const trimmedValue = value.trim();
+      if (!trimmedValue) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          email: 'Email is required.'
+        }));
+      } else if (!validateEmail(trimmedValue)) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          email: 'Please enter a valid email address.'
+        }));
+      } else {
+        setFieldErrors((prev) => ({
+          ...prev,
+          email: ''
+        }));
+      }
     }
 
     //name validation
-    if (name === 'name' && value) {
-      if (value.trim().length < 3) {
+    if (name === 'name' ) {
+      const trimmedValue = value.trim();
+      if (!trimmedValue) {
+        setFieldErrors((prev) => ({
+          ...prev,
+          name: 'Name is required.'
+        }));
+      } else if (trimmedValue.length < 3) {
         setFieldErrors((prev) => ({
           ...prev,
           name: 'Name must be at least 3 characters'
         }));
-      } else if (!validateName(value)) {
+      } else if (!validateName(trimmedValue)) {
         setFieldErrors((prev) => ({
           ...prev,
           name: 'Name should contain only letters and spaces.'
@@ -134,7 +153,7 @@ const Auth = () => {
 
     //confirmation of password
     if (name === 'confirmPassword') {
-      if (value !== formData.password) {
+      if (value && value !== formData.password) {
         setFieldErrors((prev) => ({
           ...prev,
           confirmPassword: 'Passwords do not match.'
@@ -175,8 +194,17 @@ const Auth = () => {
           return;
         }
 
-        if (formData.password.length < 8) {
-          setError('Password must be at least 8 characters.');
+        const password = formData.password;
+        if (
+          password.length < 8 ||
+          !/[A-Z]/.test(password) ||
+          !/[a-z]/.test(password) ||
+          !/\d/.test(password) ||
+          !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+        ) {
+          setError(
+            'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.'
+          );
           return;
         }
 
@@ -293,6 +321,7 @@ const Auth = () => {
               />
               <button
                 type="button"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-300 hover:text-white"
               >
@@ -355,6 +384,8 @@ const Auth = () => {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
+              role="alert"
+              aria-live="polite"
               className="bg-red-500/20 border border-red-400/30 text-red-300 p-3 rounded-xl text-sm"
             >
               {error}
@@ -395,7 +426,8 @@ const Auth = () => {
             onClick={() => {
               setIsLogin(!isLogin);
               setError('');
-              setFormData({ email: '', password: '', name: '', confirmPassword: '' });
+              setFieldErrors({ email: '', password: '', name: '', confirmPassword: '' });//Clearing error while toggle
+              setFormData({ email: '', password: '', name: '', confirmPassword: '' });  
             }}
             className="text-green-400 hover:text-green-300 font-medium mt-2 transition-colors"
           >
