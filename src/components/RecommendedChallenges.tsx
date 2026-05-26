@@ -52,6 +52,17 @@ export const RecommendedChallenges: React.FC = () => {
     loadDBPreferences();
   }, [authUser?.id, dispatch]);
 
+  // Generate recommendations if none exist yet
+  useEffect(() => {
+    if (
+      state.recommendedChallenges && 
+      state.recommendedChallenges.length === 0 && 
+      !gamificationLoading
+    ) {
+      handleRefresh();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.recommendedChallenges?.length, gamificationLoading, level, currentStreak]);
   const handleRefresh = useCallback(() => {
     setSyncing(true);
     try {
